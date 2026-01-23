@@ -1,34 +1,944 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LucasVolz.com</title>
+    <title>Lucas Volz - Technical Consultant • Musician • Photographer</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --text-primary: #f5f5f5;
+            --text-secondary: #a0a0a0;
+            --accent: #d4af37;
+            --accent-hover: #f0c75e;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: color 0.3s ease;
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-name {
+            font-size: clamp(4rem, 15vw, 12rem);
+            font-weight: 900;
+            letter-spacing: -0.05em;
+            line-height: 0.9;
             text-align: center;
+            margin-bottom: 2rem;
         }
-        .container {
+
+        .hero-name .first {
+            display: block;
+            color: var(--text-primary);
+        }
+
+        .hero-name .last {
+            display: block;
+            color: var(--accent);
+        }
+
+        /* Marquee */
+        .marquee {
+            position: absolute;
+            bottom: 10%;
+            width: 100%;
+            overflow: hidden;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.5rem 0;
+        }
+
+        .marquee-content {
+            display: flex;
+            animation: scroll 30s linear infinite;
+            white-space: nowrap;
+        }
+
+        .marquee-content span {
+            padding: 0 2rem;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--text-secondary);
+        }
+
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* Sections */
+        section {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            overflow: hidden;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        section:not(.hero) {
+            max-height: 250px;
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+        }
+
+        section.hero {
+            min-height: 100vh;
+            cursor: default;
+        }
+
+        section:not(.hero).expanded {
+            max-height: 5000px;
+            padding-top: 8rem;
+            padding-bottom: 8rem;
+            cursor: default;
+            min-height: 100vh;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Section content hiding */
+        section:not(.hero):not(.expanded) .section-subtitle,
+        section:not(.hero):not(.expanded) .about-content,
+        section:not(.hero):not(.expanded) .consulting-grid,
+        section:not(.hero):not(.expanded) .music-grid,
+        section:not(.hero):not(.expanded) .photo-grid,
+        section:not(.hero):not(.expanded) .gear-categories,
+        section:not(.hero):not(.expanded) .contact-content {
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: opacity 0.3s ease, max-height 0.6s ease;
+        }
+
+        section.expanded .section-subtitle,
+        section.expanded .about-content,
+        section.expanded .consulting-grid,
+        section.expanded .music-grid,
+        section.expanded .photo-grid,
+        section.expanded .gear-categories,
+        section.expanded .contact-content {
+            opacity: 1;
+            max-height: 10000px;
+            transition: opacity 0.6s ease 0.2s, max-height 0.8s ease;
+        }
+
+        .section-title {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 900;
+            margin-bottom: 3rem;
+            letter-spacing: -0.02em;
+            transition: color 0.3s ease;
+            position: relative;
+            display: inline-block;
+            line-height: 1.1;
+        }
+
+        section:not(.hero):not(.expanded) .section-title {
+            cursor: pointer;
+            margin-bottom: 0;
+        }
+
+        section:not(.hero):not(.expanded) .section-title:hover {
+            color: var(--accent);
+        }
+
+        section:not(.hero):not(.expanded) .section-title::after {
+            content: '+';
+            position: absolute;
+            right: -1.5em;
+            opacity: 0.5;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        section:not(.hero):not(.expanded) .section-title:hover::after {
+            opacity: 1;
+            transform: rotate(90deg);
+        }
+
+        section.expanded .section-title::after {
+            content: '−';
+            position: absolute;
+            right: -1.5em;
+            opacity: 0.5;
+            cursor: pointer;
+        }
+
+        section.expanded .section-title:hover::after {
+            opacity: 1;
+        }
+
+        .section-subtitle {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        /* About Section */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin-top: 3rem;
+        }
+
+        .about-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+
+        .about-text p {
+            margin-bottom: 1.5rem;
+        }
+
+        .about-highlights {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .highlight-item {
+            padding: 2rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .highlight-item h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent);
+        }
+
+        .highlight-item p {
+            color: var(--text-secondary);
+        }
+
+        /* Technical Consulting Section */
+        .consulting-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .consulting-card {
+            background: var(--bg-secondary);
+            padding: 2.5rem;
+            border-radius: 12px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .consulting-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(74, 158, 255, 0.2);
+        }
+
+        .consulting-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        .consulting-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .consulting-card ul {
+            margin-top: 1rem;
+            padding-left: 1.5rem;
+            color: var(--text-secondary);
+        }
+
+        .consulting-card li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Music Section */
+        .music-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .music-item {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .music-item h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .music-item p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .music-player {
+            width: 100%;
+            margin-top: 1rem;
+            background: var(--bg-dark);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        /* Photography Section */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .photo-item {
+            aspect-ratio: 4/3;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .photo-item:hover {
+            transform: scale(1.05);
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--text-secondary);
+            font-size: 3rem;
+        }
+
+        /* Gear Section */
+        .gear-categories {
+            margin-top: 3rem;
+        }
+
+        .gear-category {
+            margin-bottom: 4rem;
+        }
+
+        .gear-category h3 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+
+        .gear-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .gear-item {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .gear-item h4 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .gear-item p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Contact Section */
+        .contact-content {
+            text-align: center;
             max-width: 800px;
-            margin: 50px auto;
+            margin: 0 auto;
         }
-        h1 {
-            color: #333;
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
         }
-        img {
-            max-width: 100%;
-            height: auto;
-            margin-top: 20px;
+
+        .contact-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1.5rem 3rem;
+            background: var(--bg-secondary);
+            border-radius: 50px;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .contact-link svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        .contact-link:hover {
+            border-color: var(--accent);
+            background: transparent;
+            color: var(--accent);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-secondary);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav ul {
+                gap: 1.5rem;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+
+            .marquee-content span {
+                font-size: 0.8rem;
+                padding: 0 1rem;
+            }
+
+            section:not(.hero).expanded {
+                padding: 6rem 1.5rem;
+            }
+
+            section:not(.hero):not(.expanded) {
+                padding: 2rem 1.5rem;
+                max-height: 180px;
+            }
+
+            section:not(.hero):not(.expanded) .section-title::after {
+                right: -0.8em;
+                font-size: 0.8em;
+            }
+
+            .section-title {
+                font-size: clamp(2rem, 10vw, 4rem);
+            }
+        }
+
+        /* Smooth reveal animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Welcome to my Website!</h1>
-        <p>Exciting things to come.</p>
-        <img src="photos/20180327231135_IMG_2992-01.jpg" alt="ATX Lightning">
-    </div>
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#consulting">Consulting</a></li>
+            <li><a href="#photography">Photography</a></li>
+            <li><a href="#gear">Gear</a></li>
+            <li><a href="#music">Music</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-name">
+            <span class="first">LUCAS</span>
+            <span class="last">VOLZ</span>
+        </div>
+        
+        <div class="marquee">
+            <div class="marquee-content">
+                <span>Technical Consultant</span>
+                <span>•</span>
+                <span>Musician</span>
+                <span>•</span>
+                <span>Photographer</span>
+                <span>•</span>
+                <span>Enterprise Solutions</span>
+                <span>•</span>
+                <span>Audio Engineer</span>
+                <span>•</span>
+                <span>Problem Solver</span>
+                <span>•</span>
+                <!-- Duplicate for seamless loop -->
+                <span>Technical Consultant</span>
+                <span>•</span>
+                <span>Musician</span>
+                <span>•</span>
+                <span>Photographer</span>
+                <span>•</span>
+                <span>Enterprise Solutions</span>
+                <span>•</span>
+                <span>Audio Engineer</span>
+                <span>•</span>
+                <span>Problem Solver</span>
+                <span>•</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <h2 class="section-title">About</h2>
+        <p class="section-subtitle">Technical expertise meets creative passion</p>
+        
+        <div class="about-content">
+            <div class="about-text">
+                <p>Hello, I'm Lucas. I'm a technical guru specializing in enterprise solutions, system migrations, and automation at scale for operations teams. With more than 8 years of experience at Meta, I've landed projects that have saved thousands of hours and transformed how organizations work.</p>
+                
+                <p>Beyond the technical realm, I'm a musician and photographer. Music allows me to explore creativity through sound, while photography lets me capture moments and perspectives that tell stories.</p>
+                
+                <p>I believe the best solutions come from understanding both the technical requirements and the human experience. Whether I'm designing enterprise tooling or creating music, I approach each challenge with curiosity, precision, and a commitment to excellence.</p>
+            </div>
+            
+            <div class="about-highlights">
+                <div class="highlight-item">
+                    <h3>Technical Excellence</h3>
+                    <p>IC6 Enterprise Support Engineer at Meta with expertise in large-scale migrations and automation</p>
+                </div>
+                
+                <div class="highlight-item">
+                    <h3>Creative Pursuits</h3>
+                    <p>Musician and photographer exploring the intersection of art and technology</p>
+                </div>
+                
+                <div class="highlight-item">
+                    <h3>Located In</h3>
+                    <p>North Mankato, Minnesota</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technical Consulting Section -->
+    <section id="consulting">
+        <h2 class="section-title">Technical Consulting</h2>
+        <p class="section-subtitle">Enterprise solutions that scale</p>
+        
+        <div class="consulting-grid">
+            <div class="consulting-card">
+                <h3>Enterprise Migrations</h3>
+                <p>Specialized in large-scale system migrations affecting thousands of users globally. I define requirements and develop UAT testing strategies that ensure seamless transitions and validate successful implementations.</p>
+                <ul>
+                    <li>Cross-platform migrations</li>
+                    <li>Tooling requirement integrity & validation</li>
+                    <li>Stakeholder management</li>
+                </ul>
+            </div>
+            
+            <div class="consulting-card">
+                <h3>Automation & Tooling</h3>
+                <p>Built automation solutions that saved 22,000+ hours through intelligent triage systems and workflow optimization.</p>
+                <ul>
+                    <li>Process automation</li>
+                    <li>Custom tooling development</li>
+                    <li>Efficiency analysis</li>
+                </ul>
+            </div>
+            
+            <div class="consulting-card">
+                <h3>Technical Program Management</h3>
+                <p>Led enterprise tooling transformations with proven track record of $600K+ in operational savings.</p>
+                <ul>
+                    <li>Strategic planning</li>
+                    <li>Cross-functional leadership</li>
+                    <li>Measurable outcomes</li>
+                </ul>
+            </div>
+            
+            <div class="consulting-card">
+                <h3>Home Networking & Automation</h3>
+                <p>Design and implement smart home solutions that integrate seamlessly with your lifestyle. From network infrastructure to home automation ecosystems.</p>
+                <ul>
+                    <li>Network design & optimization</li>
+                    <li>Home automation integration</li>
+                    <li>Custom smart home solutions</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Photography Section -->
+    <section id="photography">
+        <h2 class="section-title">Photography</h2>
+        <p class="section-subtitle">Captured moments</p>
+        
+        <div class="photo-grid">
+            <div class="photo-item">
+                <img src="photos/20180327231135_IMG_2992-01.jpg" alt="ATX Lightning">
+            </div>
+            <div class="photo-item">
+                <img src="photos/IMG_5014.JPG" alt="Dog">
+            </div>
+            <div class="photo-item">
+                <img src="photos/DSC01863-01.jpeg" alt="Lake">
+            </div>
+            <div class="photo-item">
+                <img src="photos/DSC01837.JPG" alt="Northern Lights">
+            </div>
+            <div class="photo-item">
+                <img src="photos/20240604_205558.jpg" alt="Sunset">
+            </div>
+            <div class="photo-item">
+                <img src="photos/20220908_064906-01.jpeg" alt="ATX Bridge">
+            </div>
+        </div>
+    </section>
+
+    <!-- Gear Section -->
+    <section id="gear">
+        <h2 class="section-title">Gear</h2>
+        <p class="section-subtitle">Tools of the trade</p>
+        
+        <div class="gear-categories">
+            <div class="gear-category">
+                <h3>Recording Equipment</h3>
+                <div class="gear-grid">
+                    <div class="gear-item">
+                        <h4>Audio Interface</h4>
+                        <p>UAD Apollo x8p<br>Apollo Twin X</p>
+                    </div>
+                    <div class="gear-item">
+                        <h4>Microphones</h4>
+                        <p>Shure SM7<br>Shure Beta 57<br>Rode NT5 Stereo Pair<br>MXL V69 Mogami Edition<br>AKG Perception 400</p>
+                    </div>
+                    <div class="gear-item">
+                        <h4>Monitors</h4>
+                        <p>Genelec 8010A</p>
+                    </div>
+                    <div class="gear-item">
+                        <h4>Headphones</h4>
+                        <p>Sennheiser HD660s<br>Sennheiser HD380 Pro<br>Sennheiser HD280 Pro<br>JH Audio JH11 Pro Custom IEMs</p>
+                    </div>
+                    <div class="gear-item">
+                        <h4>Pedals & PreAmps</h4>
+                        <p>Grace Design Felix2 PreAmp<br>UA Enigmatic<br>UA Dream<br>Peterson StrobostompHD</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="gear-category">
+                <h3>Instruments</h3>
+                <div class="gear-grid">
+                    <div class="gear-item">
+                        <h4>Guitars</h4>
+                        <p>2012 Martin D18 Custom Shop w/ LR Baggs Hifi Duet<br>2021 Taylor 214CE SB DLX<br>2014 Fender American Stratocaster</p>
+                    </div>
+                    <div class="gear-item">
+                        <h4>Mandolins</h4>
+                        <p>2008 Morgan Monroe MM100<br>1959 Fender Mandocaster</p>
+                    </div>
+                    <div class="gear-item">
+                        <h4>Bass Guitars</h4>
+                        <p>Sterling Stingray 4 string</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="gear-category">
+                <h3>Photography Gear</h3>
+                <div class="gear-grid">
+                    <div class="gear-item">
+                        <h4>Camera Bodies</h4>
+                        <p>Sony A7IV<br>Canon T3i</p>
+                    </div>
+                    <div class="gear-item">
+                        <h4>Lenses</h4>
+                        <p>Sony 50mm 1.8<br>Sony 28-70<br>Sigma 105mm 2.8 Macro<br>Canon 10-18mm<br>Canon 50mm 1.8<br>Canon 55-250mm<br>Canon 18-55mm</p>
+                    </div>
+                    <div class="gear-item">
+                        <h4>Accessories</h4>
+                        <p>Manfrotto Tripod<br>Godox V1S Flash for Sony<br>Elgato Keylight<br>and lots more...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Music Section -->
+    <section id="music">
+        <h2 class="section-title">Music</h2>
+        <p class="section-subtitle">Sound and composition</p>
+        
+        <div class="music-grid">
+            <div class="music-item">
+                <h3>Track Title One</h3>
+                <p>Genre • Year</p>
+                <div class="music-player">
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">🎵 Audio player placeholder - Add your tracks here</p>
+                </div>
+            </div>
+            
+            <div class="music-item">
+                <h3>Track Title Two</h3>
+                <p>Genre • Year</p>
+                <div class="music-player">
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">🎵 Audio player placeholder - Add your tracks here</p>
+                </div>
+            </div>
+            
+            <div class="music-item">
+                <h3>Track Title Three</h3>
+                <p>Genre • Year</p>
+                <div class="music-player">
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">🎵 Audio player placeholder - Add your tracks here</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <h2 class="section-title">Let's Connect</h2>
+        <div class="contact-content">
+            <p class="section-subtitle">Interested in technical consulting, collaboration, or just want to say hello?</p>
+            
+            <div class="contact-links">
+                <a href="https://www.linkedin.com/in/lucasvolz/" class="contact-link" target="_blank">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"/>
+                    </svg>
+                    LinkedIn
+                </a>
+                <a href="https://www.instagram.com/el_boogie81/" class="contact-link" target="_blank">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                    </svg>
+                    Instagram
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Lucas Volz. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Intersection Observer for initial visibility
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all sections for visibility
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Function to expand a section
+        function expandSection(section) {
+            // Instantly collapse all other sections (no animation)
+            document.querySelectorAll('section:not(.hero)').forEach(s => {
+                if (s !== section && s.classList.contains('expanded')) {
+                    // Temporarily disable transitions for instant collapse
+                    s.style.transition = 'none';
+                    s.classList.remove('expanded');
+                    // Force reflow
+                    void s.offsetHeight;
+                    // Re-enable transitions
+                    s.style.transition = '';
+                }
+            });
+            
+            // Now expand the target section
+            section.classList.add('expanded');
+            
+            // Calculate scroll position after layout settles
+            setTimeout(() => {
+                const navHeight = document.querySelector('nav').offsetHeight;
+                const sectionTop = section.getBoundingClientRect().top + window.pageYOffset;
+                const scrollPosition = sectionTop - navHeight;
+                
+                window.scrollTo({
+                    top: scrollPosition,
+                    behavior: 'smooth'
+                });
+            }, 100);
+        }
+
+        // Function to collapse a section
+        function collapseSection(section) {
+            section.classList.remove('expanded');
+        }
+
+        // Handle clicks on collapsed sections to expand them
+        document.querySelectorAll('section:not(.hero)').forEach(section => {
+            section.addEventListener('click', function(e) {
+                // Only expand if the section is collapsed
+                if (!this.classList.contains('expanded')) {
+                    expandSection(this);
+                }
+            });
+        });
+
+        // Handle clicks on section titles of expanded sections to collapse
+        document.querySelectorAll('section:not(.hero) .section-title').forEach(title => {
+            title.addEventListener('click', function(e) {
+                e.stopPropagation(); // Prevent section click from firing
+                const section = this.closest('section');
+                
+                if (section.classList.contains('expanded')) {
+                    collapseSection(section);
+                } else {
+                    expandSection(section);
+                }
+            });
+        });
+
+        // Handle navigation link clicks
+        document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').slice(1);
+                const target = document.getElementById(targetId);
+                
+                if (target && !target.classList.contains('hero')) {
+                    expandSection(target);
+                } else if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add active nav state on scroll
+        window.addEventListener('scroll', () => {
+            let current = '';
+            const sections = document.querySelectorAll('section');
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            document.querySelectorAll('nav a').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').slice(1) === current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Make hero visible immediately
+        document.querySelector('.hero').classList.add('visible');
+    </script>
 </body>
 </html>
