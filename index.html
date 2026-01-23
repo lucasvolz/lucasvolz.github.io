@@ -46,6 +46,45 @@
             overflow-x: hidden;
         }
 
+        /* LV Logo - Return to Home */
+        .logo-home {
+            position: fixed;
+            top: 1.2rem;
+            left: 2rem;
+            z-index: 1001;
+            cursor: pointer;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+        }
+
+        .logo-home.visible {
+            opacity: 1;
+        }
+
+        .logo-home:hover {
+            transform: scale(1.1);
+        }
+
+        .logo-home svg {
+            width: 40px;
+            height: 40px;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+        }
+
+        .logo-home .logo-l {
+            fill: var(--text-primary);
+            transition: fill 0.3s ease;
+        }
+
+        .logo-home .logo-v {
+            fill: var(--accent);
+            transition: fill 0.3s ease;
+        }
+
+        .logo-home:hover .logo-v {
+            fill: var(--accent-hover);
+        }
+
         /* Navigation */
         nav {
             position: fixed;
@@ -498,6 +537,16 @@
 
         /* Responsive */
         @media (max-width: 768px) {
+            .logo-home {
+                top: 1rem;
+                left: 1rem;
+            }
+
+            .logo-home svg {
+                width: 35px;
+                height: 35px;
+            }
+
             nav ul {
                 gap: 1.5rem;
             }
@@ -544,6 +593,16 @@
     </style>
 </head>
 <body>
+    <!-- LV Logo - Return to Home -->
+    <div class="logo-home" id="logoHome">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <!-- L -->
+            <path class="logo-l" d="M 20 20 L 20 70 L 45 70 L 45 65 L 25 65 L 25 20 Z"/>
+            <!-- V -->
+            <path class="logo-v" d="M 50 20 L 60 50 L 70 20 L 75 20 L 62.5 55 L 57.5 55 L 45 20 Z"/>
+        </svg>
+    </div>
+
     <!-- Navigation -->
     <nav>
         <ul>
@@ -963,6 +1022,27 @@
 
         // Make hero visible immediately
         document.querySelector('.hero').classList.add('visible');
+
+        // LV Logo - Show/Hide on scroll and handle click
+        const logoHome = document.getElementById('logoHome');
+        const hero = document.querySelector('.hero');
+        
+        window.addEventListener('scroll', () => {
+            // Show logo after scrolling past 80% of hero section
+            if (window.scrollY > hero.clientHeight * 0.8) {
+                logoHome.classList.add('visible');
+            } else {
+                logoHome.classList.remove('visible');
+            }
+        });
+
+        // Click logo to return to top
+        logoHome.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
     </script>
 </body>
 </html>
