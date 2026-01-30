@@ -33,10 +33,23 @@
             --text-secondary: #a0a0a0;
             --accent: #d4af37;
             --accent-hover: #f0c75e;
+            /* #10: Consolidated repeated color values */
+            --border-subtle: rgba(255, 255, 255, 0.1);
+            --border-faint: rgba(255, 255, 255, 0.05);
         }
 
         html {
             scroll-behavior: smooth;
+        }
+
+        /* #8: Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
         }
 
         body {
@@ -56,6 +69,8 @@
             cursor: pointer;
             transition: transform 0.3s ease, opacity 0.3s ease;
             opacity: 0;
+            /* #9: will-change for animated elements */
+            will-change: opacity, transform;
         }
 
         .logo-home.visible {
@@ -95,7 +110,7 @@
             backdrop-filter: blur(10px);
             z-index: 1000;
             padding: 1.5rem 2rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid var(--border-subtle);
         }
 
         nav ul {
@@ -156,8 +171,8 @@
             bottom: 10%;
             width: 100%;
             overflow: hidden;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid var(--border-subtle);
+            border-bottom: 1px solid var(--border-subtle);
             padding: 1.5rem 0;
         }
 
@@ -165,6 +180,8 @@
             display: flex;
             animation: scroll 30s linear infinite;
             white-space: nowrap;
+            /* #9: will-change for animated elements */
+            will-change: transform;
         }
 
         .marquee-content span {
@@ -205,8 +222,9 @@
             cursor: default;
         }
 
-        section:not(.hero).expanded {
-            max-height: 5000px;
+        /* #4 & #7: Simplified expanded state using class-based approach */
+        section.expanded {
+            max-height: none;
             padding-top: 8rem;
             padding-bottom: 8rem;
             cursor: default;
@@ -218,20 +236,22 @@
             transform: translateY(0);
         }
 
-        /* Section content hiding */
-        section:not(.hero):not(.expanded) .section-subtitle,
-        section:not(.hero):not(.expanded) .about-content,
-        section:not(.hero):not(.expanded) .consulting-grid,
-        section:not(.hero):not(.expanded) .music-grid,
-        section:not(.hero):not(.expanded) .photo-grid,
-        section:not(.hero):not(.expanded) .gear-categories,
-        section:not(.hero):not(.expanded) .contact-content {
+        /* #7: Simplified CSS selectors using .collapsed class */
+        /* Section content hiding - collapsed state */
+        .section-collapsed .section-subtitle,
+        .section-collapsed .about-content,
+        .section-collapsed .consulting-grid,
+        .section-collapsed .music-grid,
+        .section-collapsed .photo-grid,
+        .section-collapsed .gear-categories,
+        .section-collapsed .contact-content {
             opacity: 0;
             max-height: 0;
             overflow: hidden;
             transition: opacity 0.3s ease, max-height 0.6s ease;
         }
 
+        /* Expanded state content */
         section.expanded .section-subtitle,
         section.expanded .about-content,
         section.expanded .consulting-grid,
@@ -240,8 +260,8 @@
         section.expanded .gear-categories,
         section.expanded .contact-content {
             opacity: 1;
-            max-height: 10000px;
-            transition: opacity 0.6s ease 0.2s, max-height 0.8s ease;
+            max-height: none;
+            transition: opacity 0.6s ease 0.2s;
         }
 
         .section-title {
@@ -255,16 +275,17 @@
             line-height: 1.1;
         }
 
-        section:not(.hero):not(.expanded) .section-title {
+        /* #7: Simplified selectors for collapsed section titles */
+        .section-collapsed .section-title {
             cursor: pointer;
             margin-bottom: 0;
         }
 
-        section:not(.hero):not(.expanded) .section-title:hover {
+        .section-collapsed .section-title:hover {
             color: var(--accent);
         }
 
-        section:not(.hero):not(.expanded) .section-title::after {
+        .section-collapsed .section-title::after {
             content: '+';
             position: absolute;
             right: -1.5em;
@@ -272,7 +293,7 @@
             transition: transform 0.3s ease, opacity 0.3s ease;
         }
 
-        section:not(.hero):not(.expanded) .section-title:hover::after {
+        .section-collapsed .section-title:hover::after {
             opacity: 1;
             transform: rotate(90deg);
         }
@@ -350,7 +371,7 @@
             padding: 2.5rem;
             border-radius: 12px;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-faint);
         }
 
         .consulting-card:hover {
@@ -391,7 +412,7 @@
             background: var(--bg-secondary);
             padding: 2rem;
             border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-faint);
         }
 
         .music-item h3 {
@@ -410,6 +431,11 @@
             background: var(--bg-dark);
             border-radius: 8px;
             padding: 1rem;
+        }
+
+        /* #1: YouTube placeholder styling */
+        .music-player iframe {
+            border-radius: 8px;
         }
 
         /* Photography Section */
@@ -474,7 +500,7 @@
             background: var(--bg-secondary);
             padding: 1.5rem;
             border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-faint);
         }
 
         .gear-item h4 {
@@ -533,7 +559,7 @@
             text-align: center;
             padding: 3rem 2rem;
             color: var(--text-secondary);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid var(--border-subtle);
         }
 
         /* Responsive */
@@ -561,16 +587,16 @@
                 padding: 0 1rem;
             }
 
-            section:not(.hero).expanded {
+            section.expanded {
                 padding: 6rem 1.5rem;
             }
 
-            section:not(.hero):not(.expanded) {
+            .section-collapsed {
                 padding: 2rem 1.5rem;
                 max-height: 180px;
             }
 
-            section:not(.hero):not(.expanded) .section-title::after {
+            .section-collapsed .section-title::after {
                 right: -0.8em;
                 font-size: 0.8em;
             }
@@ -655,7 +681,7 @@
     </section>
 
     <!-- About Section -->
-    <section id="about">
+    <section id="about" class="section-collapsed">
         <h2 class="section-title">About</h2>
         <p class="section-subtitle">Technical expertise meets creative passion</p>
         
@@ -688,7 +714,7 @@
     </section>
 
     <!-- Technical Consulting Section -->
-    <section id="consulting">
+    <section id="consulting" class="section-collapsed">
         <h2 class="section-title">Technical Consulting</h2>
         <p class="section-subtitle">Enterprise solutions that scale</p>
         
@@ -736,34 +762,35 @@
     </section>
 
     <!-- Photography Section -->
-    <section id="photography">
+    <section id="photography" class="section-collapsed">
         <h2 class="section-title">Photography</h2>
         <p class="section-subtitle">Captured moments</p>
         
         <div class="photo-grid">
+            <!-- #2: Added loading="lazy" and decoding="async" to all images -->
             <div class="photo-item">
-                <img src="photos/20180327231135_IMG_2992-01.jpg" alt="ATX Lightning">
+                <img src="photos/20180327231135_IMG_2992-01.jpg" alt="ATX Lightning" loading="lazy" decoding="async">
             </div>
             <div class="photo-item">
-                <img src="photos/IMG_5014.JPG" alt="Dog">
+                <img src="photos/IMG_5014.JPG" alt="Dog" loading="lazy" decoding="async">
             </div>
             <div class="photo-item">
-                <img src="photos/DSC01863-01.jpeg" alt="Lake">
+                <img src="photos/DSC01863-01.jpeg" alt="Lake" loading="lazy" decoding="async">
             </div>
             <div class="photo-item">
-                <img src="photos/DSC01837.JPG" alt="Northern Lights">
+                <img src="photos/DSC01837.JPG" alt="Northern Lights" loading="lazy" decoding="async">
             </div>
             <div class="photo-item">
-                <img src="photos/20240604_205558.jpg" alt="Sunset">
+                <img src="photos/20240604_205558.jpg" alt="Sunset" loading="lazy" decoding="async">
             </div>
             <div class="photo-item">
-                <img src="photos/20220908_064906-01.jpeg" alt="ATX Bridge">
+                <img src="photos/20220908_064906-01.jpeg" alt="ATX Bridge" loading="lazy" decoding="async">
             </div>
         </div>
     </section>
 
     <!-- Gear Section -->
-    <section id="gear">
+    <section id="gear" class="section-collapsed">
         <h2 class="section-title">Gear</h2>
         <p class="section-subtitle">Tools of the trade</p>
         
@@ -833,7 +860,7 @@
     </section>
 
     <!-- Music Section -->
-    <section id="music">
+    <section id="music" class="section-collapsed">
         <h2 class="section-title">Music</h2>
         <p class="section-subtitle">Sound and composition</p>
         
@@ -848,8 +875,13 @@
         <div class="music-grid">
             <div class="music-item">
                 <h3>Mipso - Louise Cover</h3>
-                <div class="music-player">
-                    <iframe width="100%" height="315" 
+                <div class="music-player" data-video-id="pSWlV1R_sfQ">
+                    <!-- #1: Lazy-loaded YouTube with thumbnail placeholder -->
+                    <iframe 
+                        width="100%" 
+                        height="315" 
+                        loading="lazy"
+                        srcdoc="<style>*{padding:0;margin:0;overflow:hidden}html,body{height:100%;background:#000}img,span{position:absolute;width:100%;top:0;bottom:0;margin:auto}span{height:1.5em;text-align:center;font:48px/1.5 sans-serif;color:white;text-shadow:0 0 0.5em black}</style><a href='https://www.youtube.com/embed/pSWlV1R_sfQ?autoplay=1&si=82YKN7ypsgk_CoqM'><img src='https://img.youtube.com/vi/pSWlV1R_sfQ/hqdefault.jpg' alt='Louise - Mipso Cover'><span>▶</span></a>"
                         src="https://www.youtube.com/embed/pSWlV1R_sfQ?si=82YKN7ypsgk_CoqM" 
                         title="Louise" 
                         frameborder="0" 
@@ -861,8 +893,13 @@
             
             <div class="music-item">
                 <h3>Tyler Childers - Follow You to Virgie Cover</h3>
-                <div class="music-player">
-                    <iframe width="100%" height="315" 
+                <div class="music-player" data-video-id="aw_5P2SZsTI">
+                    <!-- #1: Lazy-loaded YouTube with thumbnail placeholder -->
+                    <iframe 
+                        width="100%" 
+                        height="315" 
+                        loading="lazy"
+                        srcdoc="<style>*{padding:0;margin:0;overflow:hidden}html,body{height:100%;background:#000}img,span{position:absolute;width:100%;top:0;bottom:0;margin:auto}span{height:1.5em;text-align:center;font:48px/1.5 sans-serif;color:white;text-shadow:0 0 0.5em black}</style><a href='https://www.youtube.com/embed/aw_5P2SZsTI?autoplay=1&si=PB7py35Xr-fwaFjn'><img src='https://img.youtube.com/vi/aw_5P2SZsTI/hqdefault.jpg' alt='Follow You to Virgie - Tyler Childers Cover'><span>▶</span></a>"
                         src="https://www.youtube.com/embed/aw_5P2SZsTI?si=PB7py35Xr-fwaFjn" 
                         title="Follow You to Virgie" 
                         frameborder="0" 
@@ -875,7 +912,7 @@
     </section>
 
     <!-- Contact Section -->
-    <section id="contact">
+    <section id="contact" class="section-collapsed">
         <h2 class="section-title">Let's Connect</h2>
         <div class="contact-content">
             <p class="section-subtitle">Interested in technical consulting, collaboration, or just want to say hello?</p>
@@ -903,6 +940,15 @@
     </footer>
 
     <script>
+        // #5: Cache DOM queries at initialization
+        const sections = document.querySelectorAll('section');
+        const collapsibleSections = document.querySelectorAll('section:not(.hero)');
+        const sectionTitles = document.querySelectorAll('section:not(.hero) .section-title');
+        const navLinks = document.querySelectorAll('nav a[href^="#"]');
+        const nav = document.querySelector('nav');
+        const logoHome = document.getElementById('logoHome');
+        const hero = document.querySelector('.hero');
+
         // Intersection Observer for initial visibility
         const observerOptions = {
             threshold: 0.1,
@@ -918,48 +964,48 @@
         }, observerOptions);
 
         // Observe all sections for visibility
-        document.querySelectorAll('section').forEach(section => {
+        sections.forEach(section => {
             observer.observe(section);
         });
 
         // Function to expand a section
         function expandSection(section) {
-            // Instantly collapse all other sections (no animation)
-            document.querySelectorAll('section:not(.hero)').forEach(s => {
-                if (s !== section && s.classList.contains('expanded')) {
-                    // Temporarily disable transitions for instant collapse
-                    s.style.transition = 'none';
-                    s.classList.remove('expanded');
-                    // Force reflow
-                    void s.offsetHeight;
-                    // Re-enable transitions
-                    s.style.transition = '';
-                }
-            });
-            
-            // Now expand the target section
-            section.classList.add('expanded');
-            
-            // Calculate scroll position after layout settles
-            setTimeout(() => {
-                const navHeight = document.querySelector('nav').offsetHeight;
-                const sectionTop = section.getBoundingClientRect().top + window.pageYOffset;
-                const scrollPosition = sectionTop - navHeight;
-                
-                window.scrollTo({
-                    top: scrollPosition,
-                    behavior: 'smooth'
+            // #6: Use requestAnimationFrame to batch DOM operations and avoid forced reflow
+            requestAnimationFrame(() => {
+                // Collapse all other sections
+                collapsibleSections.forEach(s => {
+                    if (s !== section && s.classList.contains('expanded')) {
+                        s.classList.remove('expanded');
+                        s.classList.add('section-collapsed');
+                    }
                 });
-            }, 100);
+                
+                // Now expand the target section
+                section.classList.remove('section-collapsed');
+                section.classList.add('expanded');
+                
+                // Calculate scroll position after layout settles
+                requestAnimationFrame(() => {
+                    const navHeight = nav.offsetHeight;
+                    const sectionTop = section.getBoundingClientRect().top + window.pageYOffset;
+                    const scrollPosition = sectionTop - navHeight;
+                    
+                    window.scrollTo({
+                        top: scrollPosition,
+                        behavior: 'smooth'
+                    });
+                });
+            });
         }
 
         // Function to collapse a section
         function collapseSection(section) {
             section.classList.remove('expanded');
+            section.classList.add('section-collapsed');
         }
 
         // Handle clicks on collapsed sections to expand them
-        document.querySelectorAll('section:not(.hero)').forEach(section => {
+        collapsibleSections.forEach(section => {
             section.addEventListener('click', function(e) {
                 // Only expand if the section is collapsed
                 if (!this.classList.contains('expanded')) {
@@ -969,7 +1015,7 @@
         });
 
         // Handle clicks on section titles of expanded sections to collapse
-        document.querySelectorAll('section:not(.hero) .section-title').forEach(title => {
+        sectionTitles.forEach(title => {
             title.addEventListener('click', function(e) {
                 e.stopPropagation(); // Prevent section click from firing
                 const section = this.closest('section');
@@ -983,7 +1029,7 @@
         });
 
         // Handle navigation link clicks
-        document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+        navLinks.forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
                 const targetId = this.getAttribute('href').slice(1);
@@ -1000,42 +1046,49 @@
             });
         });
 
-        // Add active nav state on scroll
-        window.addEventListener('scroll', () => {
+        // #3: Combined scroll handler with throttling using requestAnimationFrame
+        let ticking = false;
+        
+        function updateActiveNav() {
             let current = '';
-            const sections = document.querySelectorAll('section');
             
             sections.forEach(section => {
                 const sectionTop = section.offsetTop;
-                const sectionHeight = section.clientHeight;
                 if (scrollY >= (sectionTop - 200)) {
                     current = section.getAttribute('id');
                 }
             });
 
-            document.querySelectorAll('nav a').forEach(link => {
+            navLinks.forEach(link => {
                 link.classList.remove('active');
                 if (link.getAttribute('href').slice(1) === current) {
                     link.classList.add('active');
                 }
             });
-        });
-
-        // Make hero visible immediately
-        document.querySelector('.hero').classList.add('visible');
-
-        // LV Logo - Show/Hide on scroll and handle click
-        const logoHome = document.getElementById('logoHome');
-        const hero = document.querySelector('.hero');
+        }
         
-        window.addEventListener('scroll', () => {
+        function updateLogoVisibility() {
             // Show logo after scrolling past 80% of hero section
             if (window.scrollY > hero.clientHeight * 0.8) {
                 logoHome.classList.add('visible');
             } else {
                 logoHome.classList.remove('visible');
             }
-        });
+        }
+        
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    updateActiveNav();
+                    updateLogoVisibility();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }, { passive: true });
+
+        // Make hero visible immediately
+        hero.classList.add('visible');
 
         // Click logo to return to top
         logoHome.addEventListener('click', () => {
