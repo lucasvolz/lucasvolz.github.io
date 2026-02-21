@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="description" content="Technical Guru, acoustic folk and bluegrass musician with a background in sound engineering. Collaborations, recordings, and live sessions.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';">
     <link rel="canonical" href="https://lucasvolz.com/">
     <title>Technical Consultant • Musician • Photographer | Lucas Volz</title>
     
@@ -573,6 +574,134 @@
             border-top: 1px solid var(--border-subtle);
         }
 
+        /* Pong Game Easter Egg */
+        .pong-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .pong-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .pong-container {
+            text-align: center;
+            position: relative;
+        }
+
+        .pong-title {
+            color: var(--accent);
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+        }
+
+        .pong-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+
+        #pongCanvas {
+            border: 3px solid var(--accent);
+            background: var(--bg-dark);
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.3);
+            display: block;
+            margin: 0 auto;
+        }
+
+        .pong-score {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin-top: 1.5rem;
+            font-family: monospace;
+        }
+
+        .pong-controls {
+            margin-top: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .pong-close {
+            position: absolute;
+            top: -3rem;
+            right: 0;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 2rem;
+            cursor: pointer;
+            transition: color 0.3s ease, transform 0.3s ease;
+            padding: 0.5rem;
+        }
+
+        .pong-close:hover {
+            color: var(--accent);
+            transform: scale(1.2);
+        }
+
+        .pong-game-over {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(10, 10, 10, 0.95);
+            padding: 3rem;
+            border-radius: 12px;
+            border: 3px solid var(--accent);
+            text-align: center;
+            display: none;
+        }
+
+        .pong-game-over.show {
+            display: block;
+        }
+
+        .pong-game-over h3 {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .pong-game-over p {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .pong-restart {
+            background: var(--accent);
+            color: var(--bg-dark);
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .pong-restart:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .logo-home {
@@ -639,6 +768,29 @@
             <!-- V -->
             <path class="logo-v" d="M 50 20 L 60 50 L 70 20 L 75 20 L 62.5 55 L 57.5 55 L 45 20 Z"/>
         </svg>
+    </div>
+
+    <!-- Pong Game Easter Egg -->
+    <div class="pong-overlay" id="pongOverlay">
+        <div class="pong-container">
+            <button class="pong-close" id="pongClose">&times;</button>
+            <h2 class="pong-title">PONG</h2>
+            <p class="pong-subtitle">You found the easter egg! 🎮 (Konami Code FTW!)</p>
+            <canvas id="pongCanvas" width="800" height="500"></canvas>
+            <div class="pong-score">
+                <span>You: <span id="playerScore">0</span></span>
+                <span style="margin: 0 3rem;">|</span>
+                <span>Computer: <span id="computerScore">0</span></span>
+            </div>
+            <div class="pong-controls">
+                Move your paddle: ↑ ↓ Arrow Keys or W/S | Press ESC to close
+            </div>
+            <div class="pong-game-over" id="gameOver">
+                <h3 id="gameOverText">You Win!</h3>
+                <p id="gameOverScore">Final Score: 5 - 3</p>
+                <button class="pong-restart" id="restartBtn">Play Again</button>
+            </div>
+        </div>
     </div>
 
     <!-- Navigation -->
@@ -780,22 +932,22 @@
         <div class="photo-grid">
             <!-- #2: Added loading="lazy" and decoding="async" to all images -->
             <div class="photo-item">
-                <img src="photos/03.jpg" alt="ATX Lightning" loading="lazy" decoding="async">
+                <img src="photos/20180327231135_IMG_2992-01.jpg" alt="ATX Lightning" loading="lazy" decoding="async">
             </div>
             <div class="photo-item">
-                <img src="photos/06.jpg" alt="Dog" loading="lazy" decoding="async">
+                <img src="photos/IMG_5014.JPG" alt="Dog" loading="lazy" decoding="async">
             </div>
             <div class="photo-item">
-                <img src="photos/05.jpg" alt="Lake" loading="lazy" decoding="async">
+                <img src="photos/DSC01863-01.jpeg" alt="Lake" loading="lazy" decoding="async">
             </div>
             <div class="photo-item">
-                <img src="photos/04.jpg" alt="Northern Lights" loading="lazy" decoding="async">
+                <img src="photos/DSC01837.JPG" alt="Northern Lights" loading="lazy" decoding="async">
             </div>
             <div class="photo-item">
-                <img src="photos/02.jpeg" alt="Sunset" loading="lazy" decoding="async">
+                <img src="photos/20240604_205558.jpg" alt="Sunset" loading="lazy" decoding="async">
             </div>
             <div class="photo-item">
-                <img src="photos/01.jpeg" alt="ATX Bridge" loading="lazy" decoding="async">
+                <img src="photos/20220908_064906-01.jpeg" alt="ATX Bridge" loading="lazy" decoding="async">
             </div>
         </div>
     </section>
@@ -973,13 +1125,13 @@
             <p class="section-subtitle">Interested in technical consulting, collaboration, or just want to say hello?</p>
             
             <div class="contact-links">
-                <a href="https://www.linkedin.com/in/lucasvolz/" class="contact-link" target="_blank">
+                <a href="https://www.linkedin.com/in/lucasvolz/" class="contact-link" target="_blank" rel="noopener noreferrer">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"/>
                     </svg>
                     LinkedIn
                 </a>
-                <a href="https://www.instagram.com/el_boogie81/" class="contact-link" target="_blank">
+                <a href="https://www.instagram.com/el_boogie81/" class="contact-link" target="_blank" rel="noopener noreferrer">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
                     </svg>
@@ -1152,6 +1304,277 @@
                 behavior: 'smooth'
             });
         });
+
+        // ===== PONG GAME EASTER EGG =====
+        const pongOverlay = document.getElementById('pongOverlay');
+        const pongCanvas = document.getElementById('pongCanvas');
+        const pongClose = document.getElementById('pongClose');
+        const gameOverEl = document.getElementById('gameOver');
+        const gameOverText = document.getElementById('gameOverText');
+        const gameOverScore = document.getElementById('gameOverScore');
+        const restartBtn = document.getElementById('restartBtn');
+        const playerScoreEl = document.getElementById('playerScore');
+        const computerScoreEl = document.getElementById('computerScore');
+        const ctx = pongCanvas.getContext('2d');
+
+        // Easter Egg Triggers
+        let logoClickCount = 0;
+        let logoClickTimer = null;
+
+        // Trigger 1: Konami Code (↑ ↑ ↓ ↓ ← → ← → B A)
+        const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        let konamiIndex = 0;
+
+        document.addEventListener('keydown', (e) => {
+            // Check for Konami Code
+            const key = e.key.toLowerCase();
+            const expectedKey = konamiCode[konamiIndex].toLowerCase();
+            
+            if (key === expectedKey || e.key === konamiCode[konamiIndex]) {
+                konamiIndex++;
+                
+                if (konamiIndex === konamiCode.length) {
+                    openPongGame();
+                    konamiIndex = 0;
+                }
+            } else {
+                konamiIndex = 0;
+            }
+        });
+
+        // Trigger 2: Click logo 5 times quickly
+        logoHome.addEventListener('click', (e) => {
+            logoClickCount++;
+            clearTimeout(logoClickTimer);
+            
+            if (logoClickCount === 5) {
+                openPongGame();
+                logoClickCount = 0;
+            }
+            
+            // Reset counter after 2 seconds
+            logoClickTimer = setTimeout(() => {
+                logoClickCount = 0;
+            }, 2000);
+        });
+
+        // Game State
+        let gameActive = false;
+        let animationId;
+        const WINNING_SCORE = 5;
+
+        const game = {
+            player: {
+                x: 10,
+                y: pongCanvas.height / 2 - 50,
+                width: 10,
+                height: 100,
+                dy: 0,
+                speed: 6
+            },
+            computer: {
+                x: pongCanvas.width - 20,
+                y: pongCanvas.height / 2 - 50,
+                width: 10,
+                height: 100,
+                dy: 0,
+                speed: 4
+            },
+            ball: {
+                x: pongCanvas.width / 2,
+                y: pongCanvas.height / 2,
+                radius: 8,
+                dx: 4,
+                dy: 4,
+                speed: 4
+            },
+            score: {
+                player: 0,
+                computer: 0
+            }
+        };
+
+        // Controls
+        const keys = {};
+        document.addEventListener('keydown', (e) => {
+            keys[e.key] = true;
+            
+            // Close game with ESC
+            if (e.key === 'Escape' && pongOverlay.classList.contains('active')) {
+                closePongGame();
+            }
+        });
+        document.addEventListener('keyup', (e) => {
+            keys[e.key] = false;
+        });
+
+        // Open Game
+        function openPongGame() {
+            pongOverlay.classList.add('active');
+            resetGame();
+            gameActive = true;
+            gameLoop();
+        }
+
+        // Close Game
+        function closePongGame() {
+            pongOverlay.classList.remove('active');
+            gameActive = false;
+            cancelAnimationFrame(animationId);
+            gameOverEl.classList.remove('show');
+        }
+
+        pongClose.addEventListener('click', closePongGame);
+
+        // Reset Game
+        function resetGame() {
+            game.score.player = 0;
+            game.score.computer = 0;
+            updateScore();
+            resetBall();
+            gameOverEl.classList.remove('show');
+        }
+
+        function resetBall() {
+            game.ball.x = pongCanvas.width / 2;
+            game.ball.y = pongCanvas.height / 2;
+            game.ball.dx = (Math.random() > 0.5 ? 1 : -1) * game.ball.speed;
+            game.ball.dy = (Math.random() * 2 - 1) * game.ball.speed;
+        }
+
+        // Update Score Display
+        function updateScore() {
+            playerScoreEl.textContent = game.score.player;
+            computerScoreEl.textContent = game.score.computer;
+        }
+
+        // Draw Functions
+        function drawRect(x, y, w, h, color) {
+            ctx.fillStyle = color;
+            ctx.fillRect(x, y, w, h);
+        }
+
+        function drawCircle(x, y, r, color) {
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(x, y, r, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function drawNet() {
+            ctx.strokeStyle = 'rgba(212, 175, 55, 0.3)';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([10, 10]);
+            ctx.beginPath();
+            ctx.moveTo(pongCanvas.width / 2, 0);
+            ctx.lineTo(pongCanvas.width / 2, pongCanvas.height);
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        function draw() {
+            // Clear canvas
+            ctx.fillStyle = '#0a0a0a';
+            ctx.fillRect(0, 0, pongCanvas.width, pongCanvas.height);
+
+            // Draw net
+            drawNet();
+
+            // Draw paddles
+            drawRect(game.player.x, game.player.y, game.player.width, game.player.height, '#f5f5f5');
+            drawRect(game.computer.x, game.computer.y, game.computer.width, game.computer.height, '#f5f5f5');
+
+            // Draw ball
+            drawCircle(game.ball.x, game.ball.y, game.ball.radius, '#d4af37');
+        }
+
+        // Update Game State
+        function update() {
+            if (!gameActive) return;
+
+            // Player movement
+            if (keys['ArrowUp'] || keys['w'] || keys['W']) {
+                game.player.y = Math.max(0, game.player.y - game.player.speed);
+            }
+            if (keys['ArrowDown'] || keys['s'] || keys['S']) {
+                game.player.y = Math.min(pongCanvas.height - game.player.height, game.player.y + game.player.speed);
+            }
+
+            // Computer AI - follows ball with some delay
+            const computerCenter = game.computer.y + game.computer.height / 2;
+            if (computerCenter < game.ball.y - 35) {
+                game.computer.y += game.computer.speed;
+            } else if (computerCenter > game.ball.y + 35) {
+                game.computer.y -= game.computer.speed;
+            }
+            game.computer.y = Math.max(0, Math.min(pongCanvas.height - game.computer.height, game.computer.y));
+
+            // Ball movement
+            game.ball.x += game.ball.dx;
+            game.ball.y += game.ball.dy;
+
+            // Ball collision with top/bottom
+            if (game.ball.y - game.ball.radius < 0 || game.ball.y + game.ball.radius > pongCanvas.height) {
+                game.ball.dy *= -1;
+            }
+
+            // Ball collision with paddles
+            if (checkPaddleCollision(game.player) || checkPaddleCollision(game.computer)) {
+                game.ball.dx *= -1.05; // Speed up slightly
+                game.ball.dy *= 1.05;
+            }
+
+            // Scoring
+            if (game.ball.x - game.ball.radius < 0) {
+                game.score.computer++;
+                updateScore();
+                checkWinner();
+                resetBall();
+            }
+            if (game.ball.x + game.ball.radius > pongCanvas.width) {
+                game.score.player++;
+                updateScore();
+                checkWinner();
+                resetBall();
+            }
+        }
+
+        function checkPaddleCollision(paddle) {
+            return game.ball.x - game.ball.radius < paddle.x + paddle.width &&
+                   game.ball.x + game.ball.radius > paddle.x &&
+                   game.ball.y + game.ball.radius > paddle.y &&
+                   game.ball.y - game.ball.radius < paddle.y + paddle.height;
+        }
+
+        function checkWinner() {
+            if (game.score.player >= WINNING_SCORE) {
+                endGame('You Win! 🏆', true);
+            } else if (game.score.computer >= WINNING_SCORE) {
+                endGame('Computer Wins! 🤖', false);
+            }
+        }
+
+        function endGame(message, playerWon) {
+            gameActive = false;
+            gameOverText.textContent = message;
+            gameOverScore.textContent = `Final Score: ${game.score.player} - ${game.score.computer}`;
+            gameOverEl.classList.add('show');
+        }
+
+        restartBtn.addEventListener('click', () => {
+            resetGame();
+            gameActive = true;
+        });
+
+        // Game Loop
+        function gameLoop() {
+            if (!pongOverlay.classList.contains('active')) return;
+            
+            update();
+            draw();
+            
+            animationId = requestAnimationFrame(gameLoop);
+        }
     </script>
 </body>
 </html>

@@ -1,0 +1,6 @@
+# robots.txt for lucasvolz.com
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://lucasvolz.com/sitemap.xml
